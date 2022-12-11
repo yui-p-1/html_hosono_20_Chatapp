@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="./css/sample.css"/>
+<title>Chatアプリ</title>
+</head>
+
+
+
+<body>
+    <header>
+    <button class="audio_button" style="margin-left:1900px; font-size:25px; background-color: gold;">Audio</button>
+    <h2>チャットアプリ</h2>
+    </header>
+
+    <div id="Time"><p>Time : <span id="real-time"></span></p></div>
+    
+    
+<!-- コンテンツ表示画面 -->
+<main>
+<div>
+    <div id="output" class="output"></div>
+    <div id="input" class="input" style="font-size:50px">
+        <form>
+            <select id="uname" name="select1" style="font-size:25px">
+                <option>わたし</option>
+                <option>相手</option>
+            </select>
+            <textarea name="" id="text" cols="100" rows="5" style="font-size:25px; background-color: white;"></textarea>
+            <button id="send" style="font-size:25px; background-color: white;">読み上げ＋送信</button>
+        </form>
+    </div>
+    
+</div>
+<div>
+    <button id="all-delete" style="font-size:25px; background-color: gold;">All Delete</button>
+    <div class="audio_wrap">       
+    <audio id="audio" src="./imgs/music.mp3" loop>
+        あなたのブラウザーは <code>audio</code>要素をサポートしていません。
+      </audio>
+    </div>
+</div>
+</main>
+
+
+<!--/ コンテンツ表示画面 -->
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+<script>
+//音声の再生
+document.getElementById('audio').play();
+
+//音声の一時停止
+document.getElementById('audio').pause();
+
+$(function () {
+  var audioBtn = $('.audio_button'),
+  audioWrap = $('.audio_wrap'),
+  audio = document.getElementById('audio');
+
+  audioBtn.on('click', function () {
+    if( audioWrap.hasClass('play') ) {
+      audio.pause();
+      audioWrap.removeClass('play');
+    } else {
+      audio.play();
+      audioWrap.addClass('play');
+    }
+  });
+});
+
+</script>
+
+<script type="text/javascript">
+    function Time() {
+       var realTime = new Date();
+       var hour = realTime.getHours();
+       var minutes  = realTime.getMinutes();
+       var seconds  = realTime.getSeconds();
+       var hyoji = hour + ":" + minutes ;
+       document.getElementById("real-time").innerHTML = hyoji;
+    }
+    setInterval('Time()',1000);
+    </script>
+
+
+<!--** 以下Firebase **-->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+        from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.14.0/firebase-database.js";
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "fir-demo-fd918.firebaseapp.com",
+      projectId: "fir-demo-fd918",
+      storageBucket: "fir-demo-fd918.appspot.com",
+      messagingSenderId: "72528433443",
+      appId: "1:72528433443:web:ac7b0280aecaa4973efc96"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    const db = getDatabase(app); // Realtime DB に接続
+    const dbRef = ref(db, "chat"); // Realtime D内の chat を使う
+    
+    
+    $("#send").on("click", function () {   
+        
+        const msg = {
+                time:document.getElementById("real-time").innerHTML,
+                uname:$("#uname").val(),
+                text: $("#text").val(),
+            };
+            const newPostRef = push(dbRef);
+            console.log("newPostRef: ", newPostRef);
+            set(newPostRef, msg);
+    
+            console.log(msg);
+        });
+    
+    $("#send").on("click", function () { 
+        const text     = document.querySelector('#text')
+        const uttr = new SpeechSynthesisUtterance(text.value)
+        uttr.lang = "ja-JP"
+        speechSynthesis.speak(uttr)
+
+        });
+
+    onChildAdded(dbRef, function(data) {
+        const key = data.key
+        const msg = data.val();
+        console.log(msg);
+
+        if (msg.uname == "わたし") {
+        const h = `<div><button class="mymsg">${msg.time}<br>${msg.text}</button></div>`;
+        $("#output").append(h);
+    }
+       else {
+        const h = `<div><button class="yourmsg">${msg.time}<br>${msg.text}</button></div>`;
+        $("#output").append(h);
+       }
+
+    });
+
+
+    $("#text").on("keydown", function(e){
+        console.log(e.keyCode);
+        if(e.keyCode === 13){
+            const msg = {
+                uname: $("#uname").val(),
+                text: $("#text").val()
+            };
+            const newPostRef = push(dbRef);
+            console.log("newPostRef: ", newPostRef);
+            set(newPostRef, msg);
+        }
+    })
+    
+document.getElementById("all-delete").addEventListener("click", function () {
+	const dbRef = ref(db, "chat");	
+    remove(dbRef);
+    location.reload();
+});
+    
+</script>
+
+
+
+</body>
+</html>

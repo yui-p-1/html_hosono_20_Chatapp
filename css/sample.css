@@ -1,0 +1,125 @@
+body {
+text-align: center;
+width: 100vm;
+height: 100vm;
+background-image: url("../imgs/Chiristmas.jpg");
+background-size: 100% auto;
+}
+
+header {
+color: green;
+  /* background-color: white; */
+
+}
+
+
+
+main {
+font-size: 50px;
+
+}
+
+#Time {
+text-align: right;
+margin: 0px 30px 0px 0px;
+font-weight:bold; 
+}
+
+.output {
+    text-align: center;
+    width: 100vm;
+    height: 600px;     /* 高さを制限(※) */
+    overflow-y: scroll;  /* スクロールバーを表示(※) */
+    /* background-color: #fff0f0; 背景色を追加 */
+    
+    
+}
+
+.mymsg {
+    font-size:25px;
+    width: 700px;
+    margin: 0px 0px 0px 700px;
+    text-align: right;
+    border: none;
+    background-color: pink;
+
+/* 吹き出し本体 */
+    position: relative;
+    padding: 20px;
+    background-color: pink;
+    border-radius: 10px;
+    box-shadow: 6px 6px 0px 0px gray;         /* 吹き出し本体の影 */
+  }
+  /* 三角アイコン */
+  .mymsg::before{
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    right: 27px;
+    bottom: -18px;
+    border-top: 15px solid gray;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+  }
+  /* 三角アイコンの影 */
+  .mymsg::after{
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    right: 20px;
+    bottom: -15px;
+    border-top: 15px solid pink;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+  }
+
+.yourmsg {
+    font-size:25px;
+    width: 700px;
+    margin: 0px 700px 0px 0px;
+    text-align: left;
+    border: none;
+    background-color: #add8e6;
+
+    /* 吹き出し本体 */
+    position: relative;
+    padding: 20px;
+    background-color: #add8e6;
+    border-radius: 10px;
+    box-shadow: 6px 6px 0px 0px black;         /* 吹き出し本体の影 */
+  }
+  /* 三角アイコン */
+  .yourmsg::before{
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    left: 27px;
+    bottom: -18px;
+    border-top: 15px solid black;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+  }
+  /* 三角アイコンの影 */
+  .yourmsg::after{
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    left: 20px;
+    bottom: -15px;
+    border-top: 15px solid  #add8e6;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+  }
+
+
+
+
+
